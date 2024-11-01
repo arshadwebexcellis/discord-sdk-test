@@ -1,23 +1,32 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useEffect, useState } from "react";
+import { DiscordSDK } from "@discord/embedded-app-sdk";
 
 function App() {
+  const [sdk, setSDK] = useState(null);
+  const [user, setUser] = useState(null);
+
+  useEffect(() => {
+    // Initialize the SDK and set it to state
+    const discordSDK = new DiscordSDK();
+    setSDK(discordSDK);
+
+    // Get the current user data if SDK is ready
+    discordSDK.user
+      .getCurrentUser()
+      .then(setUser)
+      .catch((error) => console.error("Error fetching user:", error));
+  }, []);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
+    <div>
+      <h1>Hello, Discord Embedded App!</h1>
+      {user ? (
         <p>
-          Edit <code>src/App.js</code> and save to reload.
+          Welcome, {user.username}#{user.discriminator}
         </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      ) : (
+        <p>Loading user information...</p>
+      )}
     </div>
   );
 }
