@@ -8,8 +8,9 @@ function App() {
 
   useEffect(() => {
     try {
-      // Initialize the SDK and set it to state
-      const discordSDK = new DiscordSDK();
+      // Replace 'YOUR_CLIENT_ID' with your actual Discord client ID
+      const client_id = "1301518697197994035";
+      const discordSDK = new DiscordSDK({ client_id });
       setSDK(discordSDK);
 
       // Ensure that SDK is ready and user object is available
