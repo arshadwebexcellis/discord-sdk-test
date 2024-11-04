@@ -106,10 +106,7 @@ function App() {
     };
 
     try {
-      const response = await fetch(
-        "https://dev-api.burnghost.com/telegramapi/bgGame",
-        requestOptions
-      );
+      const response = await fetch("/api/telegramapi/bgGame", requestOptions);
       const result = await response.json();
       setGames(result.data);
     } catch (error) {
