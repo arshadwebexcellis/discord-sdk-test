@@ -84,6 +84,7 @@ function App() {
 
       const userData = await userResponse.json();
       setUser(userData);
+      console.log("User data:", userData);
     } catch (err) {
       console.error("Error fetching user details:", err);
       setError("Failed to fetch user details.");
