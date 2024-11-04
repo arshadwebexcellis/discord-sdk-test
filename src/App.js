@@ -152,7 +152,7 @@ function App() {
             <li key={game.id}>
               <h3>{game.name}</h3>
               <img
-                src={`https://d30dsdzrtsmyi8.cloudfront.net/${game.thumbnailImage}`}
+                src={`/.proxy/cloudimage/${game.thumbnailImage}`}
                 alt={game.name}
                 style={{ width: 100, height: 100 }}
               />
