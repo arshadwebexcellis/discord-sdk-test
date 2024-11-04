@@ -9,7 +9,7 @@ function App() {
   useEffect(() => {
     // Initialize Discord SDK
     const client_id = "1301518697197994035"; // Use your actual client ID
-    const discordSdk = new DiscordSDK({ client_id });
+    const discordSdk = new DiscordSDK(client_id);
     setSDK(discordSdk);
 
     // Setup Discord SDK and fetch user details
@@ -39,16 +39,21 @@ function App() {
     });
 
     // Retrieve an access token
-    const response = await fetch(
-      "https://your-server.com/.proxy/discord/token",
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ code }),
-      }
-    );
+    const response = await fetch(`https://discord.com/api/oauth2/token`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded",
+      },
+      body: new URLSearchParams({
+        client_id: "1301518697197994035",
+        client_secret: "zSKjATfdsjD4rdrKcPIw1Adi2ETahFKx",
+        grant_type: "authorization_code",
+        code: code,
+      }),
+    });
+    console.log("respomse f ", response);
+
+    // Retrieve the access_token from the response
     const { access_token } = await response.json();
 
     if (!access_token) {
