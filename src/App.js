@@ -4,6 +4,7 @@ import { DiscordSDK } from "@discord/embedded-app-sdk";
 function App() {
   const [sdk, setSDK] = useState(null);
   const [user, setUser] = useState(null);
+  const [games, setGames] = useState([]);
   const [error, setError] = useState(null);
 
   useEffect(() => {
@@ -17,6 +18,7 @@ function App() {
       .then((access_token) => {
         console.log("Discord SDK is authenticated");
         fetchUserDetails(access_token);
+        fetchGames();
       })
       .catch((error) => {
         console.error("Error setting up Discord SDK:", error);
@@ -51,9 +53,7 @@ function App() {
         code: code,
       }),
     });
-    console.log("respomse f ", response);
 
-    // Retrieve the access_token from the response
     const { access_token } = await response.json();
 
     if (!access_token) {
@@ -84,10 +84,37 @@ function App() {
 
       const userData = await userResponse.json();
       setUser(userData);
-      console.log("User data:", userData);
     } catch (err) {
       console.error("Error fetching user details:", err);
       setError("Failed to fetch user details.");
+    }
+  }
+
+  // Fetch list of games
+  async function fetchGames() {
+    const myHeaders = new Headers();
+    myHeaders.append("X-API-KEY", "ZrvcoDVwV156OdppLvIVD5ufuKXsHYoTGCFhjaui");
+    myHeaders.append(
+      "Authorization",
+      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2ZTE1NmQ4NzE4N2JhZGUyYTE0ZjE1YiIsInR5cGUiOiJtaW5pLWFwcCIsImlhdCI6MTcyOTE2NTU0MX0.NW_5IPouuJ_Qu__rRpUUkxjAFdNeEyJ11OXmM60R7hs"
+    );
+
+    const requestOptions = {
+      method: "GET",
+      headers: myHeaders,
+      redirect: "follow",
+    };
+
+    try {
+      const response = await fetch(
+        "https://dev-api.burnghost.com/telegramapi/bgGame",
+        requestOptions
+      );
+      const result = await response.json();
+      setGames(result.data);
+    } catch (error) {
+      console.error("Error fetching games:", error);
+      setError("Failed to fetch game list.");
     }
   }
 
@@ -115,7 +142,25 @@ function App() {
           </p>
         </div>
       ) : (
-        <p>Loading...</p>
+        <p>Loading user info...</p>
+      )}
+
+      <h2>Available Games:</h2>
+      {games.length > 0 ? (
+        <ul>
+          {games.map((game) => (
+            <li key={game.id}>
+              <h3>{game.name}</h3>
+              <img
+                src={`https://d30dsdzrtsmyi8.cloudfront.net/${game.thumbnailImage}`}
+                alt={game.name}
+                style={{ width: 100, height: 100 }}
+              />
+            </li>
+          ))}
+        </ul>
+      ) : (
+        <p>Loading games...</p>
       )}
     </div>
   );
